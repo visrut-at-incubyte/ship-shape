@@ -1,0 +1,17 @@
+{
+  "name": "ship-shape",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "tsc -w",
+    "serve": "live-server --port=8080 --entry-file=index.html ."
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "live-server": "^1.2.2",
+    "typescript": "^5.3.3"
+  }
+}
