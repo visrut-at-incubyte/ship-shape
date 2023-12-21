@@ -4,6 +4,10 @@ const ctx = canvas.getContext("2d") as CanvasRenderingContext2D;
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 
+ctx.translate(canvas.width / 2, canvas.height / 2);
+// Flip the y-axis
+ctx.scale(1, -1);
+
 interface Point {
   x: number;
   y: number;
@@ -35,14 +39,15 @@ function drawArc(point: Point) {
 
 canvas.addEventListener("mousedown", (event: MouseEvent) => {
   state.drawing = true;
-  state.lastPoint = { x: event.clientX, y: event.clientY };
+  const { x, y } = convertToCartesianCoords(event, canvas);
+  state.lastPoint = { x, y };
   drawArc(state.lastPoint);
 });
 
 canvas.addEventListener("mousemove", (event: MouseEvent) => {
   if (!state.drawing) return;
 
-  const newPoint: Point = { x: event.clientX, y: event.clientY };
+  const newPoint = convertToCartesianCoords(event, canvas);
   drawLine(state.lastPoint, newPoint);
   drawArc(newPoint);
 
@@ -56,3 +61,20 @@ canvas.addEventListener("mouseup", () => {
 canvas.addEventListener("mouseout", () => {
   state.drawing = false;
 });
+
+function convertToCartesianCoords(
+  event: MouseEvent,
+  canvas: HTMLCanvasElement
+) {
+  let rect = canvas.getBoundingClientRect();
+
+  let x = event.clientX - rect.left;
+  let y = event.clientY - rect.top;
+
+  x -= canvas.width / 2;
+  y -= canvas.height / 2;
+
+  y = -y;
+
+  return { x, y };
+}
