@@ -4,14 +4,17 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "tsc -w",
-    "serve": "live-server --port=8080 --entry-file=index.html ."
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "live-server": "^1.2.2",
     "typescript": "^5.3.3"
+  },
+  "devDependencies": {
+    "vite": "^5.0.10"
   }
 }
