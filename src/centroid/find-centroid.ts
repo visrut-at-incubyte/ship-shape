@@ -1,4 +1,4 @@
-import { Point } from "../point";
+import { Point } from "~/point";
 
 export const findCentroid = (points: Point[]) => {
   const x = points.reduce((sum, point) => sum + point.x, 0) / points.length;

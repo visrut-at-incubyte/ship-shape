@@ -1,6 +1,6 @@
-import { findCentroid } from "../centroid/find-centroid";
-import { getMousePositionOnCanvas } from "../mouse-poistion";
-import { Point } from "../point";
+import { findCentroid } from "~/centroid/find-centroid";
+import { getMousePositionOnCanvas } from "~/mouse-poistion";
+import { Point } from "~/point";
 
 type StyleOptions = {
   lineWidth: number;
