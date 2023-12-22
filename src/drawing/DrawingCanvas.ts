@@ -22,15 +22,27 @@ export class DrawingCanvas {
   }
 
   drawArc(point: Point, styleOptions?: Partial<StyleOptions>) {
-    const { lineWidth, strokeStyle, fillStyle } = {
+    const { lineWidth, fillStyle } = {
       ...this.styleOptions,
       ...styleOptions,
     };
     const context = this.canvas.getContext("2d") as CanvasRenderingContext2D;
     context.beginPath();
-    context.arc(point.x, point.y, lineWidth, 0, 2 * Math.PI);
+    context.arc(point.x, point.y, lineWidth / 2, 0, 2 * Math.PI);
     context.fillStyle = fillStyle;
     context.fill();
+  }
+
+  drawLine(from: Point, to: Point, styleOptions?: Partial<StyleOptions>) {
+    const { lineWidth, strokeStyle } = {
+      ...this.styleOptions,
+      ...styleOptions,
+    };
+    const context = this.canvas.getContext("2d") as CanvasRenderingContext2D;
+    context.beginPath();
+    context.moveTo(from.x, from.y);
+    context.lineTo(to.x, to.y);
+    context.lineWidth = lineWidth;
     context.strokeStyle = strokeStyle;
     context.stroke();
   }
@@ -43,8 +55,9 @@ export class DrawingCanvas {
       points.y -= centroid.y;
     }
 
-    for (const points of this.recordedPoints) {
-      this.drawArc(points);
+    for (let i = 0; i < this.recordedPoints.length; i++) {
+      this.drawArc(this.recordedPoints[i]);
+      this.drawLine(this.recordedPoints[i], this.recordedPoints[i + 1]);
     }
   }
 
@@ -69,6 +82,10 @@ export class DrawingCanvas {
 
     this.canvas.addEventListener("mousemove", (event) => {
       if (this.painting) {
+        this.drawLine(
+          this.recordedPoints[this.recordedPoints.length - 1],
+          getMousePositionOnCanvas(this.canvas, event)
+        );
         this.drawArc(getMousePositionOnCanvas(this.canvas, event));
         this.recordedPoints.push(getMousePositionOnCanvas(this.canvas, event));
       }
