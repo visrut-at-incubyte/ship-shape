@@ -24,3 +24,30 @@ body {
 #play-button:hover {
   background: #eee;
 }
+
+i {
+  color: white;
+}
+
+#shape-submit-buttons {
+  top: 50%;
+  right: 10px;
+  display: flex;
+  position: absolute;
+  flex-direction: column;
+  transform: translate(0, -50%);
+}
+
+#shape-submit-buttons button {
+  border: none;
+  outline: none;
+  cursor: pointer;
+  font-size: 3rem;
+  border-radius: 5px;
+  padding: 0.5rem 1rem;
+  background-color: transparent;
+}
+
+#shape-submit-buttons button:hover {
+  background-color: #eeeeee3f;
+}

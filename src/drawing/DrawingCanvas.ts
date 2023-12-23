@@ -91,6 +91,10 @@ export class DrawingCanvas {
     this.drawLine(bottomLeft, topLeft, { strokeStyle: "red", lineWidth: 1 });
   }
 
+  getShapePoints() {
+    return this.recordedPoints;
+  }
+
   private getBoundingBoxPoints() {
     const points = this.recordedPoints;
     const topLeft = {
