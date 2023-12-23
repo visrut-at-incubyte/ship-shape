@@ -21,6 +21,7 @@ export class DrawingCanvas {
   constructor(private readonly canvas: HTMLCanvasElement) {
     this.context = this.canvas.getContext("2d") as CanvasRenderingContext2D;
     this.registerDrawingEvents();
+    this.resetCanvas();
   }
 
   drawArc(point: Point, styleOptions?: Partial<StyleOptions>) {
@@ -49,11 +50,27 @@ export class DrawingCanvas {
 
   redrawRecordedPointsAtCenter() {
     this.resetCanvas();
+
     const centroid = findCentroid(this.recordedPoints);
     for (const point of this.recordedPoints) {
       point.x -= centroid.x;
       point.y -= centroid.y;
     }
+
+    const { topLeft, bottomRight } = this.getBoundingBoxPoints();
+
+    const width = Math.abs(topLeft.x - bottomRight.x);
+    const height = Math.abs(topLeft.y - bottomRight.y);
+
+    const scaleX = 400 / width;
+    const scaleY = 400 / height;
+
+    for (const point of this.recordedPoints) {
+      point.x *= scaleX;
+      point.y *= scaleY;
+    }
+
+    console.log(this.recordedPoints);
 
     for (let i = 0; i < this.recordedPoints.length - 1; i++) {
       this.drawArc(this.recordedPoints[i]);
@@ -62,46 +79,46 @@ export class DrawingCanvas {
   }
 
   drawBoundingBox() {
+    const { topLeft, topRight, bottomRight, bottomLeft } =
+      this.getBoundingBoxPoints();
+
+    this.drawLine(topLeft, topRight, { strokeStyle: "red", lineWidth: 1 });
+    this.drawLine(topRight, bottomRight, { strokeStyle: "red", lineWidth: 1 });
+    this.drawLine(bottomRight, bottomLeft, {
+      strokeStyle: "red",
+      lineWidth: 1,
+    });
+    this.drawLine(bottomLeft, topLeft, { strokeStyle: "red", lineWidth: 1 });
+  }
+
+  private getBoundingBoxPoints() {
     const points = this.recordedPoints;
-    const topLeftCornerBoundryPoint = {
+    const topLeft = {
       x: Math.min(...points.map((point) => point.x)),
       y: Math.max(...points.map((point) => point.y)),
     };
 
-    const bottomRightCornerBoundryPoint = {
+    const bottomRight = {
       x: Math.max(...points.map((point) => point.x)),
       y: Math.min(...points.map((point) => point.y)),
     };
 
-    const topRightCornerBoundryPoint = {
-      x: bottomRightCornerBoundryPoint.x,
-      y: topLeftCornerBoundryPoint.y,
+    const topRight = {
+      x: bottomRight.x,
+      y: topLeft.y,
     };
 
-    const bottomLeftCornerBoundryPoint = {
-      x: topLeftCornerBoundryPoint.x,
-      y: bottomRightCornerBoundryPoint.y,
+    const bottomLeft = {
+      x: topLeft.x,
+      y: bottomRight.y,
     };
 
-    this.drawLine(topLeftCornerBoundryPoint, topRightCornerBoundryPoint, {
-      strokeStyle: "red",
-      lineWidth: 1,
-    });
-
-    this.drawLine(topRightCornerBoundryPoint, bottomRightCornerBoundryPoint, {
-      strokeStyle: "red",
-      lineWidth: 1,
-    });
-
-    this.drawLine(bottomRightCornerBoundryPoint, bottomLeftCornerBoundryPoint, {
-      strokeStyle: "red",
-      lineWidth: 1,
-    });
-
-    this.drawLine(bottomLeftCornerBoundryPoint, topLeftCornerBoundryPoint, {
-      strokeStyle: "red",
-      lineWidth: 1,
-    });
+    return {
+      topLeft,
+      topRight,
+      bottomRight,
+      bottomLeft,
+    };
   }
 
   private resetCanvas() {
@@ -110,6 +127,22 @@ export class DrawingCanvas {
       -this.canvas.height / 2,
       this.canvas.width,
       this.canvas.height
+    );
+
+    this.drawAxis();
+  }
+
+  private drawAxis() {
+    this.drawLine(
+      { x: -window.innerWidth, y: 0 },
+      { x: window.innerWidth, y: 0 },
+      { strokeStyle: "blue", lineWidth: 1 }
+    );
+
+    this.drawLine(
+      { x: 0, y: window.innerHeight },
+      { x: 0, y: -window.innerHeight },
+      { strokeStyle: "blue", lineWidth: 1 }
     );
   }
 
