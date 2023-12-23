@@ -172,14 +172,12 @@ export class DrawingCanvas {
 
     this.canvas.addEventListener("mouseup", (_) => {
       this.painting = false;
-      this.drawArc(findCentroid(this.recordedPoints), {
-        fillStyle: "red",
-        strokeStyle: "red",
-      });
+      this.redrawRecordedPointsAtCenter();
     });
 
     this.canvas.addEventListener("mouseout", (_) => {
       this.painting = false;
+      this.redrawRecordedPointsAtCenter();
     });
   }
 }
