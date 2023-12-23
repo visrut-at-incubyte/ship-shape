@@ -11,6 +11,7 @@ type StyleOptions = {
 export class DrawingCanvas {
   private painting = false;
   private recordedPoints: Point[] = [];
+  private readonly context: CanvasRenderingContext2D;
   private readonly styleOptions: StyleOptions = {
     lineWidth: 10,
     strokeStyle: "white",
@@ -18,6 +19,7 @@ export class DrawingCanvas {
   };
 
   constructor(private readonly canvas: HTMLCanvasElement) {
+    this.context = this.canvas.getContext("2d") as CanvasRenderingContext2D;
     this.registerDrawingEvents();
   }
 
@@ -26,11 +28,10 @@ export class DrawingCanvas {
       ...this.styleOptions,
       ...styleOptions,
     };
-    const context = this.canvas.getContext("2d") as CanvasRenderingContext2D;
-    context.beginPath();
-    context.arc(point.x, point.y, lineWidth / 2, 0, 2 * Math.PI);
-    context.fillStyle = fillStyle;
-    context.fill();
+    this.context.beginPath();
+    this.context.arc(point.x, point.y, lineWidth / 2, 0, 2 * Math.PI);
+    this.context.fillStyle = fillStyle;
+    this.context.fill();
   }
 
   drawLine(from: Point, to: Point, styleOptions?: Partial<StyleOptions>) {
@@ -38,32 +39,73 @@ export class DrawingCanvas {
       ...this.styleOptions,
       ...styleOptions,
     };
-    const context = this.canvas.getContext("2d") as CanvasRenderingContext2D;
-    context.beginPath();
-    context.moveTo(from.x, from.y);
-    context.lineTo(to.x, to.y);
-    context.lineWidth = lineWidth;
-    context.strokeStyle = strokeStyle;
-    context.stroke();
+    this.context.beginPath();
+    this.context.moveTo(from.x, from.y);
+    this.context.lineTo(to.x, to.y);
+    this.context.lineWidth = lineWidth;
+    this.context.strokeStyle = strokeStyle;
+    this.context.stroke();
   }
 
   redrawRecordedPointsAtCenter() {
     this.resetCanvas();
     const centroid = findCentroid(this.recordedPoints);
-    for (const points of this.recordedPoints) {
-      points.x -= centroid.x;
-      points.y -= centroid.y;
+    for (const point of this.recordedPoints) {
+      point.x -= centroid.x;
+      point.y -= centroid.y;
     }
 
-    for (let i = 0; i < this.recordedPoints.length; i++) {
+    for (let i = 0; i < this.recordedPoints.length - 1; i++) {
       this.drawArc(this.recordedPoints[i]);
       this.drawLine(this.recordedPoints[i], this.recordedPoints[i + 1]);
     }
   }
 
+  drawBoundingBox() {
+    const points = this.recordedPoints;
+    const topLeftCornerBoundryPoint = {
+      x: Math.min(...points.map((point) => point.x)),
+      y: Math.max(...points.map((point) => point.y)),
+    };
+
+    const bottomRightCornerBoundryPoint = {
+      x: Math.max(...points.map((point) => point.x)),
+      y: Math.min(...points.map((point) => point.y)),
+    };
+
+    const topRightCornerBoundryPoint = {
+      x: bottomRightCornerBoundryPoint.x,
+      y: topLeftCornerBoundryPoint.y,
+    };
+
+    const bottomLeftCornerBoundryPoint = {
+      x: topLeftCornerBoundryPoint.x,
+      y: bottomRightCornerBoundryPoint.y,
+    };
+
+    this.drawLine(topLeftCornerBoundryPoint, topRightCornerBoundryPoint, {
+      strokeStyle: "red",
+      lineWidth: 1,
+    });
+
+    this.drawLine(topRightCornerBoundryPoint, bottomRightCornerBoundryPoint, {
+      strokeStyle: "red",
+      lineWidth: 1,
+    });
+
+    this.drawLine(bottomRightCornerBoundryPoint, bottomLeftCornerBoundryPoint, {
+      strokeStyle: "red",
+      lineWidth: 1,
+    });
+
+    this.drawLine(bottomLeftCornerBoundryPoint, topLeftCornerBoundryPoint, {
+      strokeStyle: "red",
+      lineWidth: 1,
+    });
+  }
+
   private resetCanvas() {
-    const context = this.canvas.getContext("2d") as CanvasRenderingContext2D;
-    context.clearRect(
+    this.context.clearRect(
       -this.canvas.width / 2,
       -this.canvas.height / 2,
       this.canvas.width,

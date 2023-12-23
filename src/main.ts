@@ -8,6 +8,7 @@ const main = () => {
   const button = document.getElementById("play-button") as HTMLButtonElement;
   button.addEventListener("click", () => {
     drawingCanvas.redrawRecordedPointsAtCenter();
+    drawingCanvas.drawBoundingBox();
   });
 };
 
