@@ -1,4 +1,5 @@
 ### Ship Shape
 
-- client application: `pnpm dev`
-- server application: `pnpm dev:server`
+- It would only work in development for now
+- Monorepo with turbopack
+- start application: `pnpm dev`

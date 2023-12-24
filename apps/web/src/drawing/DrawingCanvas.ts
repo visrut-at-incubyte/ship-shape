@@ -70,11 +70,9 @@ export class DrawingCanvas {
       point.y *= scaleY;
     }
 
-    console.log(this.recordedPoints);
-
     for (let i = 0; i < this.recordedPoints.length - 1; i++) {
-      this.drawArc(this.recordedPoints[i]);
-      this.drawLine(this.recordedPoints[i], this.recordedPoints[i + 1]);
+      this.drawArc(this.recordedPoints[i]!);
+      this.drawLine(this.recordedPoints[i]!, this.recordedPoints[i + 1]!);
     }
   }
 
@@ -162,7 +160,7 @@ export class DrawingCanvas {
     this.canvas.addEventListener("mousemove", (event) => {
       if (this.painting) {
         this.drawLine(
-          this.recordedPoints[this.recordedPoints.length - 1],
+          this.recordedPoints[this.recordedPoints.length - 1]!,
           getMousePositionOnCanvas(this.canvas, event)
         );
         this.drawArc(getMousePositionOnCanvas(this.canvas, event));

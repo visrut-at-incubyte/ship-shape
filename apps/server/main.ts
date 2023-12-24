@@ -1,8 +1,9 @@
-const express = require("express");
-const fs = require("fs");
-const cors = require("cors");
+import express from "express";
+import * as fs from "fs";
+import * as path from "path";
+import cors from "cors";
+
 const app = express();
-const path = require("path");
 
 app.use(express.json());
 app.use(cors());
@@ -32,7 +33,7 @@ app.post("/save", (req, res) => {
       .sort((a, b) => b - a);
 
     const lastNumber = relevantFiles.length > 0 ? relevantFiles[0] : 0;
-    const nextNumber = lastNumber + 1;
+    const nextNumber = lastNumber! + 1;
     const paddedNumber = String(nextNumber).padStart(4, "0");
     const filename = path.join(typeDir, `${paddedNumber}${data.type}.json`);
 

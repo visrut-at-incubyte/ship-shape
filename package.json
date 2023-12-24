@@ -3,23 +3,17 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
+  "private": "true",
   "scripts": {
-    "dev": "vite --port 4000",
-    "build": "tsc && vite build",
-    "preview": "vite preview",
-    "dev:server": "nodemon server/main.js"
+    "build": "turbo build",
+    "dev": "turbo dev"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "dependencies": {
-    "cors": "^2.8.5",
-    "express": "^4.18.2",
-    "typescript": "^5.3.3"
-  },
   "devDependencies": {
-    "@types/node": "^20.10.5",
-    "nodemon": "^3.0.2",
-    "vite": "^5.0.10"
-  }
+    "@repo/typescript-config": "workspace:*",
+    "turbo": "^1.11.2"
+  },
+  "packageManager": "pnpm@8.12.1"
 }
