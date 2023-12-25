@@ -11,10 +11,10 @@ const main = () => {
   );
 
   for (const button of shapeSubmitButtons) {
-    button.addEventListener("click", () => {
+    button.addEventListener("click", async () => {
       const shape = button.classList.item(0) as Shape;
       const points = drawingCanvas.getShapePoints();
-      submitData(points, shape);
+      await submitData(points, shape);
     });
   }
 };
