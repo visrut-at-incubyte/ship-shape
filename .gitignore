@@ -1,6 +1,10 @@
+# node
 node_modules
 /.config
 /dist
 .cache
 .turbo
 dist
+
+# python
+venv

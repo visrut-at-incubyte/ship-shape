@@ -1,0 +1,12 @@
+{
+  "name": "model",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "train": "./run.sh"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
